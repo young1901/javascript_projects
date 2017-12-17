@@ -80,6 +80,25 @@ function prepare(){
     balls.push(ball);
   }      
 }
+
+var evil = new Ball(width/2.0, height/2.0, 0.0, 0.0, 'rgb(' + random(0,255) + ',' + random(0,255) + ',' + random(0,255) +')', 10);
+function moveBall()
+{
+	evil.x = event.clientX;
+	evil.y = event.clientY;
+}
+canvas.addEventListener('click',moveBall);
+
+function eatBalls()
+{
+	for(var i=0; i<balls.length; i++){
+		var dx = evil.x - balls[i].x;
+		var dy = evil.y - balls[i].y;
+		if( Math.sqrt(dx*dx + dy*dy) < evil.size + balls[i].size )
+			balls.splice(i, 1);
+	}
+}
+
 function loop() {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
   ctx.fillRect(0, 0, width, height);
@@ -87,12 +106,15 @@ function loop() {
     balls[i].draw();
     balls[i].update();
     balls[i].collisionDetect();
+	eatBalls();
   }
-
+  evil.draw();
   requestAnimationFrame(loop);
 }
-
-
-
 prepare();
 loop();
+
+
+
+
+
